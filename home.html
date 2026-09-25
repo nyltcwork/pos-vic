@@ -255,7 +255,7 @@
                 <div class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm">
                     <div><h2 class="text-xl font-bold text-slate-800">Product List & Stock</h2></div>
                     <div class="flex gap-2">
-                        <button onclick="fetchProductsFromSheet(true)" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-sm rounded-xl shadow flex items-center space-x-2 transition">
+                        <button onclick="fetchProductsFromSheet(false)" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-sm rounded-xl shadow flex items-center space-x-2 transition">
                             <i data-lucide="refresh-cw" class="w-4 h-4"></i><span>Sync Latest Data</span>
                         </button>
                         <button data-requires-auth onclick="openProductModal()" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm rounded-xl shadow flex items-center space-x-2 transition">
@@ -287,7 +287,7 @@
                         <p class="text-xs text-slate-400">Configure custom daily exchange rates synchronized with Google Sheet</p>
                     </div>
                     <div class="flex gap-2">
-                        <button onclick="fetchRatesFromSheet()" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-sm rounded-xl shadow flex items-center space-x-2 transition">
+                        <button onclick="fetchRatesFromSheet(false)" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-sm rounded-xl shadow flex items-center space-x-2 transition">
                             <i data-lucide="refresh-cw" class="w-4 h-4"></i><span>Sync Rates</span>
                         </button>
                         <button data-requires-auth onclick="openRateModal()" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm rounded-xl shadow flex items-center space-x-2 transition">
@@ -331,11 +331,11 @@
                     <div class="flex flex-wrap items-center gap-2">
                         <div class="flex items-center gap-1 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl text-xs">
                             <span class="text-slate-500 font-medium">From:</span>
-                            <input type="date" id="reportStartDate" class="bg-transparent font-semibold text-slate-700 focus:outline-none">
+                            <input type="date" id="reportStartDate" autocomplete="off" class="bg-transparent font-semibold text-slate-700 focus:outline-none">
                         </div>
                         <div class="flex items-center gap-1 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl text-xs">
                             <span class="text-slate-500 font-medium">To:</span>
-                            <input type="date" id="reportEndDate" class="bg-transparent font-semibold text-slate-700 focus:outline-none">
+                            <input type="date" id="reportEndDate" autocomplete="off" class="bg-transparent font-semibold text-slate-700 focus:outline-none">
                         </div>
                         <button onclick="filterReportsByDate()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-xs rounded-xl shadow flex items-center gap-1.5 transition">
                             <i data-lucide="filter" class="w-3.5 h-3.5"></i> Filter
@@ -343,7 +343,7 @@
                         <button onclick="exportReportsToExcel()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-xs rounded-xl shadow flex items-center gap-1.5 transition">
                             <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i> Export Excel
                         </button>
-                        <button onclick="fetchSalesHistory()" class="p-2 bg-slate-100 text-slate-600 hover:bg-slate-200 rounded-xl transition" title="Refresh">
+                        <button onclick="fetchSalesHistory(false)" class="p-2 bg-slate-100 text-slate-600 hover:bg-slate-200 rounded-xl transition" title="Refresh">
                             <i data-lucide="refresh-cw" class="w-4 h-4"></i>
                         </button>
                     </div>
@@ -929,12 +929,13 @@
             } catch (e) {}
         }
 
-        async function fetchRatesFromSheet() {
+        async function fetchRatesFromSheet(silent = true) {
             try {
                 const res = await authFetch(RATES_API_URL + `?t=${Date.now()}`);
                 const data = await res.json();
                 if (data && data.status === 'error') {
-                    if (data.message === 'Unauthorized') handleSessionExpired();
+                    if (data.message === 'Unauthorized') { handleSessionExpired(); return; }
+                    if (!silent) showToast(data.message || 'Sync failed', 'error');
                     return;
                 }
                 if (Array.isArray(data) && data.length > 0) {
@@ -955,11 +956,17 @@
                         saveCache();
                         renderRatesTable();
                         renderTickerRates();
+                        if (!silent) showToast('Rates updated', 'success');
+                    } else if (!silent) {
+                        showToast('No rate data received', 'error');
                     }
+                } else if (!silent) {
+                    showToast('No rate data received', 'error');
                 }
             } catch (err) {
                 renderRatesTable();
                 renderTickerRates();
+                if (!silent) showToast('Connection error while syncing rates', 'error');
             }
         }
 
@@ -970,7 +977,8 @@
                 if (!response.ok) throw new Error('Network error');
                 const rawData = await response.json();
                 if (rawData && rawData.status === 'error') {
-                    if (rawData.message === 'Unauthorized') handleSessionExpired();
+                    if (rawData.message === 'Unauthorized') { handleSessionExpired(); return; }
+                    if (!silent) showToast(rawData.message || 'Sync failed', 'error');
                     return;
                 }
                 if (Array.isArray(rawData) && rawData.length > 0) {
@@ -978,8 +986,12 @@
                     saveCache();
                     buildCategoryTree(); renderCategories(); filterAndRenderProducts(); renderProductsTable();
                     if (!silent) showToast('Products updated', 'success');
+                } else if (!silent) {
+                    showToast('No product data received', 'error');
                 }
-            } catch (error) {}
+            } catch (error) {
+                if (!silent) showToast('Connection error while syncing products', 'error');
+            }
         }
 
         function buildCategoryTree() {
@@ -993,6 +1005,29 @@
             categoryTree = Object.keys(catMap).map(mainCat => ({ name: mainCat, subs: Array.from(catMap[mainCat]) }));
         }
 
+        // บังคับตั้งค่าช่อง From/To ใน Reports ให้เป็นวันที่ปัจจุบันเสมอ
+        // หมายเหตุ: ใช้เวลาท้องถิ่น (Local Time) ไม่ใช่ toISOString() ซึ่งเป็น UTC
+        // เพราะ UTC จะช้ากว่าเวลาลาว 7 ชม. ทำให้ช่วงเที่ยงคืน-เช้าตรู่วันที่เพี้ยนเป็นเมื่อวาน
+        function getLocalDateStr() {
+            const d = new Date();
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${y}-${m}-${day}`;
+        }
+        function setReportDatesToToday() {
+            const todayStr = getLocalDateStr();
+            const startInput = document.getElementById('reportStartDate');
+            const endInput = document.getElementById('reportEndDate');
+            if(startInput) startInput.value = todayStr;
+            if(endInput) endInput.value = todayStr;
+        }
+
+        // เผื่อกรณีเบราว์เซอร์คืนค่าฟอร์มเก่าจาก cache (bfcache) หลังหน้าโหลดเสร็จแล้ว
+        window.addEventListener('pageshow', function (event) {
+            setReportDatesToToday();
+        });
+
         window.onload = async function() {
             try { localStorage.removeItem('pos_login_logs'); } catch (e) {} // ลบ Login History เก่าที่เคยเก็บไว้ในเครื่อง
             applySavedTheme();
@@ -1002,11 +1037,7 @@
             renderTickerRates();
             renderRatesTable();
 
-            const todayStr = new Date().toISOString().split('T')[0];
-            const startInput = document.getElementById('reportStartDate');
-            const endInput = document.getElementById('reportEndDate');
-            if(startInput) startInput.value = todayStr;
-            if(endInput) endInput.value = todayStr;
+            setReportDatesToToday();
 
             // ต้องผ่านการยืนยัน session ก่อน ถึงจะเปิดหน้าและโหลดข้อมูลได้
             const ok = await verifySession();
@@ -1359,7 +1390,7 @@
             });
 
             const now = new Date();
-            const dateISO = now.toISOString().split('T')[0];
+            const dateISO = getLocalDateStr();
             const dateDisplay = now.toLocaleDateString('en-GB');
 
             const newOrder = {
@@ -1536,20 +1567,26 @@
             }
         }
 
-        async function fetchSalesHistory() {
+        async function fetchSalesHistory(silent = true) {
             try {
                 const response = await authFetch(ORDERS_API_URL + `?t=${Date.now()}`);
                 if (!response.ok) throw new Error('Network error');
                 const data = await response.json();
                 if (data && data.status === 'error') {
-                    if (data.message === 'Unauthorized') handleSessionExpired();
+                    if (data.message === 'Unauthorized') { handleSessionExpired(); return; }
+                    if (!silent) showToast(data.message || 'Refresh failed', 'error');
                     return;
                 }
                 if (Array.isArray(data)) {
                     salesHistory = data.reverse();
                     filterReportsByDate();
+                    if (!silent) showToast('Sales history refreshed', 'success');
+                } else if (!silent) {
+                    showToast('No sales data received', 'error');
                 }
-            } catch (error) {}
+            } catch (error) {
+                if (!silent) showToast('Connection error while refreshing', 'error');
+            }
         }
 
         function normalizeDateToISO(dateStr) {
