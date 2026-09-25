@@ -1005,8 +1005,8 @@
             const todayStr = new Date().toISOString().split('T')[0];
             const startInput = document.getElementById('reportStartDate');
             const endInput = document.getElementById('reportEndDate');
-            if(startInput && !startInput.value) startInput.value = todayStr;
-            if(endInput && !endInput.value) endInput.value = todayStr;
+            if(startInput) startInput.value = todayStr;
+            if(endInput) endInput.value = todayStr;
 
             // ต้องผ่านการยืนยัน session ก่อน ถึงจะเปิดหน้าและโหลดข้อมูลได้
             const ok = await verifySession();
