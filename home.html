@@ -856,6 +856,7 @@
             if (currCode === 'USD') return '$' + amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
             if (currCode === 'THB') return '฿' + amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
             if (currCode === 'CNY') return '¥' + amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            if (currCode === 'EUR') return '€' + amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
             return amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' ' + currCode;
         }
 
