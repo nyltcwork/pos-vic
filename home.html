@@ -861,7 +861,7 @@
         }
 
         function formatRefUSD(amountInLAK) {
-            const usdRate = RATES['USD'] ? RATES['USD'].rate : 22165;
+            const usdRate = RATES['USD'] ? RATES['USD'].rate : ;
             return '$' + (amountInLAK / usdRate).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         }
 
