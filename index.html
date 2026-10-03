@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
     <meta name="referrer" content="no-referrer">
-    <title>POS Express Pro (Dynamic Multi-Currency)</title>
+    <title>POS Express Pro MAG LAO PDR</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
@@ -97,7 +97,7 @@
                     </div>
                     <div class="relative">
                         <i data-lucide="lock" class="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2"></i>
-                        <input type="password" id="loginPassword" placeholder="••••••••" class="w-full pl-11 pr-4 py-3 bg-slate-100 border border-transparent rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white" onkeydown="if(event.key==='Enter') handleLogin()">
+                        <input type="password" id="loginPassword" placeholder="••••••••" class="w-full pl-11 pr-4 py-3 bg-slate-100 border border-transparent rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white">
                     </div>
                     <label class="flex items-center gap-2 text-xs text-slate-600 select-none cursor-pointer">
                         <input type="checkbox" id="rememberMeCheckbox" class="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500">
@@ -117,7 +117,7 @@
     <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
 
     <script>
-        const LOGIN_API_URL = 'https://script.google.com/macros/s/AKfycbwqkvkYMA5NijjHmpHolWMlCg1OV8ATaDzkhZ2o7TlExevIgzKZYuPVm8uTLsuLYI0eIg/exec';
+        const LOGIN_API_URL = 'https://script.google.com/macros/s/AKfycbxpN_zYIt6-XM0J6RDM7cGTB9vLra4S2dkInyT5ObQzfr6sBbGMnfExQPFpI79rABwSMA/exec';
 
         const SESSION_KEY = 'pos_session';
         const NOTICE_KEY = 'pos_notice';
@@ -153,7 +153,10 @@
             if (saved !== 'white') document.body.setAttribute('data-theme', saved);
         }
 
+        let loginInProgress = false;
+
         async function handleLogin() {
+            if (loginInProgress) return; // กันเรียกซ้ำ (เช่น กด Enter รัว)
             const now = Date.now();
             if (now < loginLockedUntil) {
                 const secs = Math.ceil((loginLockedUntil - now) / 1000);
@@ -169,6 +172,7 @@
                 return;
             }
 
+            loginInProgress = true;
             const loginBtn = document.getElementById('loginSubmitBtn');
             if (loginBtn) loginBtn.disabled = true;
             showToast('Verifying...', 'info');
@@ -213,6 +217,7 @@
                 console.error(error);
                 showToast('Connection error occurred', 'error');
             } finally {
+                loginInProgress = false;
                 if (loginBtn) loginBtn.disabled = false;
             }
         }
