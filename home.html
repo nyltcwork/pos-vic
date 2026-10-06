@@ -38,9 +38,93 @@
             body * { visibility: hidden; }
             #printableReceipt, #printableReceipt * { visibility: visible; }
             #printableReceipt { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 15px; }
-            /* โหมด A4: ขยายตัวอักษร 1.6 เท่า ใบเสร็จกว้างประมาณ 168 มม. อยู่กึ่งกลางกระดาษ */
-            body.print-a4 #printableReceipt { zoom: 1.6; left: 0; right: 0; width: 105mm; margin: 0 auto; }
+            /* ===== โหมดพิมพ์ A4: ซ่อนทุกอย่าง แล้วพิมพ์เฉพาะเทมเพลต #a4Receipt (ใบเสร็จให้ลูกค้าไม่กระทบ) ===== */
+            body.print-a4 { display: block !important; height: auto !important; overflow: visible !important; background: #fff !important; }
+            body.print-a4 > *:not(#a4Receipt) { display: none !important; }
+            body.print-a4 #a4Receipt { display: block; }
+            body.print-a4 #a4Receipt, body.print-a4 #a4Receipt * { visibility: visible; }
         }
+        /* ---------- เทมเพลตใบเสร็จ A4 (แสดงเฉพาะตอนพิมพ์ A4) ---------- */
+        #a4Receipt { display: none; color: #1e293b; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+        #a4Receipt .a4-sheet { position: relative; box-sizing: border-box; width: 190mm; min-height: 295mm; margin: 0 auto; padding: 9mm 0 41mm; }
+        #a4Receipt .a4-header { position: relative; text-align: center; padding: 0 52mm 3mm; min-height: 22mm; }
+        #a4Receipt .a4-shop { font-size: 15pt; font-weight: 700; letter-spacing: .3px; }
+        #a4Receipt .a4-addr { font-size: 10.5pt; color: #475569; margin-top: 1.2mm; }
+        #a4Receipt .a4-date { font-size: 9.5pt; color: #64748b; margin-top: 2.2mm; }
+        #a4Receipt .a4-logo { position: absolute; right: 0; top: -1mm; width: 46mm; height: auto; }
+        #a4Receipt .a4-dots { border-bottom: .45mm dotted #94a3b8; margin: 0 0 4mm; }
+        #a4Receipt .a4-box { border: .5mm solid #cbd5e1; border-radius: 4.5mm; padding: 3.2mm 6mm; margin-bottom: 4.2mm; box-shadow: 0 .5mm 1.2mm rgba(15,23,42,.14); page-break-inside: avoid; break-inside: avoid; }
+        #a4Receipt .a4-line { font-size: 12pt; line-height: 1.65; }
+        #a4Receipt .a4-table { width: 100%; border-collapse: collapse; font-size: 11.5pt; }
+        #a4Receipt .a4-table th { text-align: left; font-weight: 700; padding: 0 0 2mm; border-bottom: .3mm solid #cbd5e1; }
+        #a4Receipt .a4-table td { padding: 1.1mm 0; vertical-align: top; }
+        #a4Receipt .a4-table tr { break-inside: avoid; page-break-inside: avoid; }
+        #a4Receipt .a4-box.a4-items { break-inside: auto; page-break-inside: auto; }
+        #a4Receipt .a4-table .c0 { padding-right: 4mm; }
+        #a4Receipt .a4-table .c1 { text-align: center; width: 10mm; }
+        #a4Receipt .a4-table .c2 { text-align: right; width: 27mm; white-space: nowrap; }
+        #a4Receipt .a4-table .c3 { text-align: right; width: 27mm; white-space: nowrap; }
+        #a4Receipt .a4-table .c4 { text-align: right; width: 27mm; white-space: nowrap; font-weight: 600; }
+        /* เส้นแบ่งคอลัมน์ (แนวตั้ง) ระหว่าง Item | Cost | Qty | Price | Profit กันอ่านสลับช่อง */
+        #a4Receipt .a4-table .c1, #a4Receipt .a4-table .c2, #a4Receipt .a4-table .c3, #a4Receipt .a4-table .c4 { border-left: .25mm solid #e2e8f0; padding-left: 2.4mm; padding-right: 2.4mm; }
+        #a4Receipt .a4-table th.c1 { text-align: center; }
+        #a4Receipt .a4-table th.c2, #a4Receipt .a4-table th.c3, #a4Receipt .a4-table th.c4 { text-align: right; }
+        #a4Receipt .a4-table td div { font-size: 8pt; line-height: 1.25; margin-top: .6mm; white-space: nowrap; }
+        #a4Receipt .a4-table tfoot td { border-top: .3mm solid #cbd5e1; padding-top: 2mm; font-weight: 700; }
+        #a4Receipt .a4-totals { text-align: right; }
+        #a4Receipt .a4-totals p { font-size: 12pt; line-height: 1.75; margin: 0; }
+        #a4Receipt .a4-totals .a4-grand { font-size: 15pt; font-weight: 700; margin-top: 1mm; }
+        #a4Receipt .a4-totals .a4-paid { font-size: 10.5pt; color: #475569; margin-top: 2mm; padding-top: 2.5mm; border-top: .45mm dotted #94a3b8; }
+        #a4Receipt .a4-totals .a4-profit { font-weight: 700; margin-top: 1mm; }
+        #a4Receipt .a4-rule { border-top: .3mm solid #cbd5e1; margin: 0; }
+        #a4Receipt .a4-sign { display: flex; justify-content: flex-end; padding: 4mm 0; break-inside: avoid; page-break-inside: avoid; }
+        #a4Receipt .a4-sign-box { box-sizing: border-box; width: 74mm; height: 38mm; border: .4mm solid #cbd5e1; border-radius: 3mm; padding-top: 25mm; text-align: center; }
+        #a4Receipt .a4-sign-inner { display: inline-block; }
+        #a4Receipt .a4-sign-dots { display: block; border-bottom: .5mm dotted #475569; height: 0; margin-bottom: 2.5mm; }
+        #a4Receipt .a4-sign-label { font-family: Arial, Helvetica, sans-serif; font-size: 12.5pt; line-height: 1.2; color: #0f172a; white-space: nowrap; }
+        #a4Receipt .a4-foot { position: absolute; left: 0; right: 0; bottom: 20mm; text-align: center; padding-top: 3.5mm; border-top: .3mm solid #cbd5e1; break-inside: avoid; page-break-inside: avoid; }
+        #a4Receipt .a4-foot .t1 { font-size: 10.5pt; color: #475569; }
+        #a4Receipt .a4-foot .t2 { font-size: 9.5pt; color: #64748b; margin-top: 3mm; }
+        #a4Receipt .a4-foot .t3 { font-size: 9.5pt; color: #64748b; margin-top: 1.5mm; }
+
+        /* ---------- ปรับหน้าตาตารางรายการ A4 ให้อ่านง่าย/สวยขึ้น ---------- */
+        #a4Receipt { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        #a4Receipt .a4-box.a4-items { padding: 0; overflow: hidden; }
+        #a4Receipt .a4-table th { background: #eef2f7; color: #334155; font-size: 10.5pt; letter-spacing: .4px; padding: 2.8mm 2.4mm; border-bottom: .3mm solid #cbd5e1; }
+        #a4Receipt .a4-table td { padding: 2.4mm 2.4mm; }
+        #a4Receipt .a4-table .c0 { padding-left: 6mm; padding-right: 3mm; }
+        #a4Receipt .a4-table .c4 { padding-right: 6mm; }
+        #a4Receipt .a4-table tbody tr + tr td { border-top: .25mm solid #e8edf3; }
+        #a4Receipt .a4-table td.c4 { color: #15803d; }
+        #a4Receipt .a4-table td.c4.neg { color: #b91c1c; }
+        #a4Receipt .a4-table tfoot td { background: #eef2f7; border-top: .3mm solid #cbd5e1; padding-top: 2.8mm; padding-bottom: 2.8mm; font-weight: 700; }
+        #a4Receipt .a4-table tfoot td.c4 { color: #15803d; }
+        #a4Receipt .a4-table tfoot td.c4.neg { color: #b91c1c; }
+        /* แถบ % การโหลดด้านล่างจอ (สีทึบเข้ม อ่านออกทุกธีม และไม่ติดไปตอนพิมพ์) */
+        #progressDock { position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); width: min(92vw, 380px); z-index: 10000; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+        #progressDock .pg-item { background: rgba(15, 23, 42, .94); color: #fff; border-radius: 12px; padding: 9px 12px; box-shadow: 0 8px 24px rgba(15, 23, 42, .35); }
+        #progressDock .pg-row { display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 600; margin-bottom: 6px; }
+        #progressDock .pg-pct { font-variant-numeric: tabular-nums; font-weight: 800; }
+        #progressDock .pg-track { height: 6px; background: rgba(255, 255, 255, .2); border-radius: 999px; overflow: hidden; }
+        #progressDock .pg-fill { height: 100%; background: #818cf8; border-radius: 999px; transition: width .15s linear, background .2s; }
+        #progressDock .pg-done .pg-fill { background: #34d399; }
+        #progressDock .pg-fail .pg-fill { background: #f87171; }
+        #progressDock .pg-fail .pg-pct { color: #fca5a5; }
+        #ringOverlay { position: fixed; inset: 0; z-index: 10001; display: none; align-items: center; justify-content: center; background: rgba(15, 23, 42, .45); backdrop-filter: blur(2px); }
+        #ringOverlay.show { display: flex; }
+        #ringOverlay .ring-card { background: #fff; color: #1e293b; border-radius: 20px; padding: 24px 34px 20px; text-align: center; box-shadow: 0 20px 50px rgba(15, 23, 42, .35); font-family: 'Prompt', sans-serif; }
+        #ringOverlay .ring-wrap { position: relative; width: 120px; height: 120px; margin: 0 auto; }
+        #ringOverlay circle { fill: none; }
+        #ringOverlay .ring-spin { stroke: #a5b4fc; stroke-width: 3; stroke-linecap: round; stroke-dasharray: 60 292; transform-origin: 60px 60px; animation: ringspin 1s linear infinite; }
+        #ringOverlay .ring-track { stroke: #e2e8f0; stroke-width: 8; }
+        #ringOverlay .ring-bar { stroke: #4f46e5; stroke-width: 8; stroke-linecap: round; stroke-dasharray: 289.03; stroke-dashoffset: 289.03; transform: rotate(-90deg); transform-origin: 60px 60px; transition: stroke-dashoffset .15s linear, stroke .2s; }
+        #ringOverlay.done .ring-bar { stroke: #10b981; }
+        #ringOverlay.fail .ring-bar { stroke: #ef4444; }
+        #ringOverlay.done .ring-spin, #ringOverlay.fail .ring-spin { animation: none; opacity: 0; }
+        #ringOverlay #ringPct { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800; font-variant-numeric: tabular-nums; }
+        #ringOverlay #ringLabel { margin-top: 12px; font-size: 13px; font-weight: 600; color: #64748b; }
+        @keyframes ringspin { to { transform: rotate(360deg); } }
+        @media print { #progressDock, #ringOverlay { display: none !important; } }
         .product-card {
             transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
             will-change: transform;
@@ -98,9 +182,27 @@
 <body class="h-screen overflow-hidden flex flex-col bg-slate-100 text-slate-800">
 
     <!-- Auth gate: ปิดหน้าไว้จนกว่า backend จะยืนยัน token -->
+    <div id="progressDock" aria-live="polite"></div>
+
+    <!-- วงกลมหมุน + % ด้านใน (ใช้ตอน Save Product / Save Rate) ครอบหน้าจอไว้ กันกดซ้ำระหว่างบันทึก -->
+    <div id="ringOverlay" aria-live="polite">
+        <div class="ring-card">
+            <div class="ring-wrap">
+                <svg viewBox="0 0 120 120" width="120" height="120">
+                    <circle class="ring-spin" cx="60" cy="60" r="56"></circle>
+                    <circle class="ring-track" cx="60" cy="60" r="46"></circle>
+                    <circle class="ring-bar" id="ringBar" cx="60" cy="60" r="46"></circle>
+                </svg>
+                <div id="ringPct">0%</div>
+            </div>
+            <div id="ringLabel">Saving...</div>
+        </div>
+    </div>
+
     <div id="authGate" style="position:fixed;inset:0;z-index:9999;background:#f1f5f9;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;font-family:'Prompt',sans-serif;font-size:14px;color:#64748b">
         <div style="width:32px;height:32px;border:3px solid #cbd5e1;border-top-color:#4f46e5;border-radius:50%;animation:posspin .8s linear infinite"></div>
         <div>Verifying session...</div>
+        <div id="authGatePct" style="font-size:13px;font-weight:600;color:#16a34a;min-height:18px"></div>
     </div>
 
     <!-- Main Header -->
@@ -257,7 +359,7 @@
                 <div class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm">
                     <div><h2 class="text-xl font-bold text-slate-800">Product List & Stock</h2></div>
                     <div class="flex gap-2">
-                        <button onclick="fetchProductsFromSheet(false)" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-sm rounded-xl shadow flex items-center space-x-2 transition">
+                        <button onclick="fetchProductsFromSheet(false, true)" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-sm rounded-xl shadow flex items-center space-x-2 transition">
                             <i data-lucide="refresh-cw" class="w-4 h-4"></i><span>Sync Latest Data</span>
                         </button>
                         <button data-requires-auth onclick="openProductModal()" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm rounded-xl shadow flex items-center space-x-2 transition">
@@ -270,7 +372,7 @@
                         <table class="w-full text-left border-collapse text-sm">
                             <thead>
                                 <tr class="bg-slate-50 text-slate-600 text-xs uppercase tracking-wider border-b border-slate-100">
-                                    <th class="p-4">Image</th><th class="p-4">Product Name</th><th class="p-4">Category</th><th class="p-4 text-right">Price (LAK)</th><th class="p-4 text-center">Stock</th><th class="p-4 text-center">Actions</th>
+                                    <th class="p-4">Image</th><th class="p-4">Product Name</th><th class="p-4">Category</th><th class="p-4 text-right">Price (LAK)</th><th class="p-4 text-right">Cost (LAK)</th><th class="p-4 text-right">Profit</th><th class="p-4 text-center">Stock</th><th class="p-4 text-center">Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="productTableBody" class="divide-y divide-slate-100"></tbody>
@@ -289,7 +391,7 @@
                         <p class="text-xs text-slate-400">Configure custom daily exchange rates synchronized with Google Sheet</p>
                     </div>
                     <div class="flex gap-2">
-                        <button onclick="fetchRatesFromSheet(false)" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-sm rounded-xl shadow flex items-center space-x-2 transition">
+                        <button onclick="fetchRatesFromSheet(false, true)" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-sm rounded-xl shadow flex items-center space-x-2 transition">
                             <i data-lucide="refresh-cw" class="w-4 h-4"></i><span>Sync Rates</span>
                         </button>
                         <button data-requires-auth onclick="openRateModal()" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm rounded-xl shadow flex items-center space-x-2 transition">
@@ -339,7 +441,7 @@
                             <span class="text-slate-500 font-medium">To:</span>
                             <input type="date" id="reportEndDate" autocomplete="off" class="bg-transparent font-semibold text-slate-700 focus:outline-none">
                         </div>
-                        <button onclick="filterReportsByDate()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-xs rounded-xl shadow flex items-center gap-1.5 transition">
+                        <button onclick="applyReportFilter()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-xs rounded-xl shadow flex items-center gap-1.5 transition">
                             <i data-lucide="filter" class="w-3.5 h-3.5"></i> Filter
                         </button>
                         <button onclick="exportReportsToExcel()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-xs rounded-xl shadow flex items-center gap-1.5 transition">
@@ -353,7 +455,7 @@
 
                 <!-- แจ้งเตือน: ออเดอร์ที่ยังไม่ได้บันทึกลง Google Sheet -->
                 <div id="unsyncedBanner" class="hidden flex items-center justify-between gap-3 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl px-4 py-3 text-sm">
-                    <span><b id="unsyncedCount">0</b> order(s) NOT saved to Google Sheet yet. Do not close this page.</span>
+                    <span><b id="unsyncedCount">0</b> order(s) NOT saved to Google Sheet yet. Do not close this page.<span id="unsyncedReason" class="block text-[11px] font-semibold text-rose-600 mt-0.5 break-all"></span></span>
                     <button onclick="retryUnsyncedOrders()" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-lg text-xs">Retry</button>
                 </div>
 
@@ -415,7 +517,13 @@
                     </div>
                 </div>
 
-                <div>
+                <!-- สลับโหมดจ่ายแบบแบ่ง (หลายวิธี/หลายสกุลในบิลเดียว) -->
+                <label class="flex items-center justify-between p-3 bg-slate-50 border border-slate-200 rounded-xl cursor-pointer">
+                    <span class="text-xs font-semibold text-slate-700">Split payment <span class="font-normal text-slate-400">(mix methods / currencies)</span></span>
+                    <input type="checkbox" id="splitModeToggle" onchange="setSplitMode(this.checked)" class="w-4 h-4 accent-indigo-600">
+                </label>
+
+                <div id="singleMethodWrap">
                     <label class="block text-xs font-semibold text-slate-500 mb-2">Select Payment Method</label>
                     <div class="grid grid-cols-3 gap-2">
                         <button onclick="setPaymentMethod('cash')" id="btnMethodCash" class="pay-method-btn border-2 border-indigo-600 bg-indigo-50 text-indigo-700 p-3 rounded-xl flex flex-col items-center justify-center gap-1 font-semibold text-xs"><i data-lucide="banknote" class="w-6 h-6"></i> Cash</button>
@@ -438,6 +546,20 @@
 
                     <!-- Change Box (Always in LAK) -->
                     <div id="changeBoxContainer" class="p-4 bg-emerald-50 border border-emerald-200 rounded-xl space-y-1"></div>
+                </div>
+
+                <!-- โหมดจ่ายแบบแบ่ง -->
+                <div id="splitPaySection" class="hidden space-y-3">
+                    <div id="splitLines" class="space-y-2"></div>
+                    <div class="flex gap-2">
+                        <button type="button" onclick="addPayLine()" class="flex-1 py-2 border-2 border-dashed border-indigo-300 text-indigo-600 hover:bg-indigo-50 rounded-xl text-xs font-bold">+ Add payment</button>
+                        <button type="button" onclick="fillRemaining()" class="px-4 py-2 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 rounded-xl text-xs font-bold">Fill remaining</button>
+                    </div>
+                    <div id="splitQrBox" class="hidden flex flex-col items-center space-y-2 py-1">
+                        <div id="splitQrImg" class="p-2 bg-white border border-slate-200 rounded-xl shadow-sm"></div>
+                        <p class="text-xs font-bold text-slate-700">MINES ADVISORY GROUP</p>
+                    </div>
+                    <div id="splitSummary" class="p-4 rounded-xl border space-y-1"></div>
                 </div>
 
                 <div id="qrPaySection" class="hidden flex flex-col items-center justify-center space-y-3 py-2">
@@ -542,8 +664,15 @@
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-medium text-slate-600 mb-1">Price (LAK)</label>
-                        <input type="number" id="modalPrice" class="w-full p-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <input type="number" id="modalPrice" oninput="updateModalProfit()" class="w-full p-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">Cost (LAK)</label>
+                        <input type="number" id="modalCost" oninput="updateModalProfit()" class="w-full p-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                </div>
+                <p id="modalProfitText" class="text-xs font-semibold text-emerald-600 -mt-1">Profit: -</p>
+                <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-medium text-slate-600 mb-1">Barcode</label>
                         <input type="text" id="modalBarcode" class="w-full p-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
@@ -607,10 +736,55 @@
     <!-- Toast Notification -->
     <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
 
+    <!-- เทมเพลตใบเสร็จ A4 (ซ่อนไว้ ใช้เฉพาะตอนกดปุ่ม A4; ข้อมูลถูกเติมจากใบเสร็จที่เปิดอยู่ใน fillA4Receipt()) -->
+    <div id="a4Receipt">
+        <div class="a4-sheet">
+            <div class="a4-header">
+                <div class="a4-shop" id="a4Shop"></div>
+                <div class="a4-addr" id="a4Addr"></div>
+                <div class="a4-date" id="a4Date"></div>
+                <img class="a4-logo" alt="MAG - Mines Advisory Group" src="data:image/png;base64,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">
+            </div>
+            <div class="a4-dots"></div>
+            <div class="a4-box">
+                <div class="a4-line">Order ID: <b id="a4OrderId"></b></div>
+                <div class="a4-line">Cashier: <span id="a4Cashier"></span></div>
+            </div>
+            <div class="a4-box a4-items">
+                <table class="a4-table">
+                    <thead><tr><th class="c0">Item</th><th class="c3">Cost</th><th class="c1">Qty</th><th class="c2">Price</th><th class="c4">Profit</th></tr></thead>
+                    <tbody id="a4Items"></tbody>
+                    <tfoot id="a4ItemsFoot"></tfoot>
+                </table>
+            </div>
+            <div class="a4-box a4-totals">
+                <p>Subtotal: <span id="a4Subtotal"></span></p>
+                <p>Discount: <span id="a4Discount"></span></p>
+                <p>VAT: <span id="a4Vat"></span></p>
+                <p class="a4-grand">Grand Total: <span id="a4Grand"></span></p>
+                <p class="a4-paid">Paid: <span id="a4Paid"></span></p>
+            </div>
+            <div class="a4-rule"></div>
+            <div class="a4-sign">
+                <div class="a4-sign-box">
+                    <div class="a4-sign-inner">
+                        <div class="a4-sign-dots"></div>
+                        <div class="a4-sign-label">Receiver's Signature</div>
+                    </div>
+                </div>
+            </div>
+            <div class="a4-foot">
+                <div class="t1" id="a4Thanks"></div>
+                <div class="t2" id="a4Tel"></div>
+                <div class="t3" id="a4Web"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- ================= JAVASCRIPT ================= -->
     <script>
-        const SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbxCcyaQCcB_i09jY4d-Wer-JN06Y2CTSj5lOnrVk8zQEdzY6HKnPWpLt0N1V_dVMok89g/exec';
-        const ORDERS_API_URL = 'https://script.google.com/macros/s/AKfycbxGRg2B3sQW1kyIbO0p07jyYmtnV5gwN2U9xgDWTVn146zbRVKSOUjYOwPrFHtpOGeq/exec';
+        const SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbxYIjBpeVmNX_RKwQKXF8S5GKAUaGwMBLbqIVPzbu6xTSqDjgaforJ6-Y6OVAciC4mDFg/exec';
+        const ORDERS_API_URL = 'https://script.google.com/macros/s/AKfycbyYIunIL3dbg7DYdub9ENZhNS5hZahDcnIjRTjYb_D7BVePKMeEMuzk4Cw1wXM81QpI/exec';
         const RATES_API_URL = 'https://script.google.com/macros/s/AKfycbxU4MauTeBZWPXNY74JIDMfE68u8g7AA7TKWEgDJWzq5Qgh2F0cYIdkJ6Zi1xf_SlUF/exec';
         
         // URL ใหม่สำหรับระบบ Login ที่คุณระบุมา
@@ -633,6 +807,10 @@
         let cart = [];
         let salesHistory = [];
         let selectedPaymentMethod = 'cash';
+        let historyRange = { from: '', to: '' }; // ช่วงวันที่ของประวัติที่โหลดมาจากชีตล่าสุด
+        let lastSaveError = '';  // สาเหตุล่าสุดที่บันทึกออเดอร์ลงชีตไม่สำเร็จ (โชว์ในแบนเนอร์/toast)
+        let splitMode = false;   // จ่ายแบบแบ่งหลายรายการ
+        let payLines = [];       // [{method, currency, amount(string)}]
         let currentOrderToPrint = null;
         let pendingOrders = []; // ออเดอร์ที่เพิ่งขาย ยังไม่เห็นบนเซิร์ฟเวอร์ (กันหายตอน refresh รายงาน)
         let unsyncedIds = new Set();   // order_id ที่ส่งแล้วแต่บันทึกลงชีตไม่สำเร็จ (รอ Retry)
@@ -675,6 +853,101 @@
         // แนบ token ไปกับทุก request ที่แก้ไข/อ่านข้อมูล
         // สำคัญ: Google Apps Script Web App อ่าน custom HTTP header (เช่น Authorization) ไม่ได้
         // จึงต้องฝัง token ไว้ใน JSON body (สำหรับ POST) หรือใน query string (สำหรับ GET) แทน
+        // ================= แถบ % การโหลด (มุมล่างของจอ) =================
+        // หมายเหตุ: Google Apps Script ไม่บอกขนาดข้อมูลล่วงหน้า จึงเป็น "ค่าประมาณ" ไม่ใช่ % จริงตามจำนวนไบต์
+        //   ช่วงรอเซิร์ฟเวอร์ ตัวเลขค่อย ๆ ไต่ขึ้นถึงราว 70% -> เมื่อเริ่มได้รับข้อมูลเลื่อนเป็น 75-95%
+        //   (ถ้าเซิร์ฟเวอร์บอกขนาดมาด้วยจะนับตามไบต์จริง) -> ครบแล้วเป็น 100% แล้วหายไปเอง
+        const progressTasks = new Map();
+        let progressSeq = 0, progressTimer = null;
+
+        function startProgress(label, target) {
+            const id = ++progressSeq;
+            progressTasks.set(id, { label: label, pct: 3, cap: 70, state: 'run', target: target || 'dock' });
+            if (!progressTimer) progressTimer = setInterval(tickProgress, 120);
+            renderProgress();
+            return id;
+        }
+        function setProgress(id, pct, cap) {
+            const t = progressTasks.get(id); if (!t) return;
+            t.pct = Math.max(t.pct, Math.min(99, pct));
+            if (cap !== undefined) t.cap = cap;
+            renderProgress();
+        }
+        function finishProgress(id, ok) {
+            const t = progressTasks.get(id); if (!t) return;
+            t.state = ok ? 'done' : 'fail';
+            if (ok) t.pct = 100;
+            renderProgress();
+            setTimeout(() => { progressTasks.delete(id); renderProgress(); }, ok ? 700 : (t.target === 'ring' ? 900 : 3000));
+        }
+        function tickProgress() {
+            progressTasks.forEach(t => { if (t.state === 'run') t.pct += (t.cap - t.pct) * 0.06; });
+            renderProgress();
+            if (progressTasks.size === 0) { clearInterval(progressTimer); progressTimer = null; }
+        }
+        function renderProgress() {
+            const all = Array.from(progressTasks.values());
+            // หน้า "Verifying session..." แสดงเป็นตัวเลข % ตรงกลางใต้ข้อความ
+            const gateEl = document.getElementById('authGatePct');
+            const gateTask = all.find(t => t.target === 'gate');
+            if (gateEl && gateTask) gateEl.textContent = gateTask.state === 'fail' ? '' : Math.round(gateTask.pct) + '%';
+            // วงกลมหมุน + % ด้านใน (Save Product / Save Rate)
+            const ov = document.getElementById('ringOverlay');
+            const ringTask = all.find(t => t.target === 'ring');
+            if (ov) {
+                if (ringTask) {
+                    const pct = Math.max(0, Math.min(100, Math.round(ringTask.pct)));
+                    ov.classList.add('show');
+                    ov.classList.toggle('done', ringTask.state === 'done');
+                    ov.classList.toggle('fail', ringTask.state === 'fail');
+                    document.getElementById('ringBar').style.strokeDashoffset = String(289.03 * (1 - pct / 100));
+                    document.getElementById('ringPct').textContent = ringTask.state === 'fail' ? '!' : pct + '%';
+                    document.getElementById('ringLabel').textContent = ringTask.label;
+                } else {
+                    ov.classList.remove('show', 'done', 'fail');
+                }
+            }
+            const dock = document.getElementById('progressDock');
+            if (!dock) return;
+            dock.innerHTML = all.filter(t => t.target === 'dock').map(t => {
+                const pct = Math.round(t.pct);
+                const text = t.state === 'fail' ? 'Failed' : pct + '%';
+                return `<div class="pg-item pg-${t.state}">
+                    <div class="pg-row"><span class="pg-label">${escapeHtml(t.label)}</span><span class="pg-pct">${text}</span></div>
+                    <div class="pg-track"><div class="pg-fill" style="width:${t.state === 'fail' ? 100 : pct}%"></div></div>
+                </div>`;
+            }).join('');
+        }
+
+        // เหมือน authFetch แต่แสดงแถบ % ระหว่างรอ/ดาวน์โหลด แล้วคืน Response ตัวเดิมให้ใช้ .ok / .json() ได้ตามปกติ
+        async function authFetchTracked(url, label, options = {}, target = 'dock') {
+            const id = startProgress(label || 'Loading', target);
+            try {
+                const res = await authFetch(url, options);
+                setProgress(id, 75, 95);
+                let out = res;
+                try {
+                    const total = parseInt(res.headers.get('content-length') || '0', 10);
+                    if (res.body && res.body.getReader) {
+                        const reader = res.body.getReader();
+                        const chunks = []; let got = 0;
+                        for (;;) {
+                            const { done, value } = await reader.read();
+                            if (done) break;
+                            chunks.push(value); got += value.length;
+                            if (total > 0) setProgress(id, 75 + Math.min(20, (got / total) * 20));
+                        }
+                        out = new Response(new Blob(chunks), { status: res.status, statusText: res.statusText, headers: res.headers });
+                    }
+                } catch (e) { out = res; } // อ่านแบบสตรีมไม่ได้: ใช้ Response เดิม ไม่กระทบการทำงาน
+                finishProgress(id, res.ok);
+                return out;
+            } catch (err) {
+                finishProgress(id, false);
+                throw err;
+            }
+        }
+
         function authFetch(url, options = {}) {
             let finalUrl = url;
             const opts = Object.assign({}, options);
@@ -830,7 +1103,7 @@
             let status = 'unknown';
             try {
                 const data = await Promise.race([
-                    authFetch(RATES_API_URL + `?t=${Date.now()}`).then(r => r.json()),
+                    authFetchTracked(RATES_API_URL + `?t=${Date.now()}`, 'Verifying session', {}, 'gate').then(r => r.json()),
                     new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 8000))
                 ]);
                 status = (data && data.status === 'error' && data.message === 'Unauthorized') ? 'unauthorized' : 'ok';
@@ -927,6 +1200,7 @@
                     size: item.Size || '',
                     color: item.Color || '',
                     price: parseFloat(item.Price) || 0,
+                    cost: parseFloat(item.Cost) || 0,
                     stock: parseInt(item['In Stock']) || 0,
                     barcode: String(item.Barcode || ''),
                     donor: String(item.Donor || ''),
@@ -966,9 +1240,10 @@
             return r;
         }
 
-        async function fetchRatesFromSheet(silent = true) {
+        async function fetchRatesFromSheet(silent = true, withProgress = false) {
             try {
-                const res = await authFetch(RATES_API_URL + `?t=${Date.now()}`);
+                const ratesUrl = RATES_API_URL + `?t=${Date.now()}`;
+                const res = await (withProgress ? authFetchTracked(ratesUrl, 'Syncing rates') : authFetch(ratesUrl));
                 const data = await res.json();
                 if (data && data.status === 'error') {
                     if (data.message === 'Unauthorized') { handleSessionExpired(); return; }
@@ -1008,10 +1283,11 @@
             }
         }
 
-        async function fetchProductsFromSheet(silent = false) {
+        async function fetchProductsFromSheet(silent = false, withProgress = false) {
             if (!silent && products.length === 0) showToast('Loading products...', 'info');
             try {
-                const response = await authFetch(SHEET_API_URL + `?t=${Date.now()}`);
+                const productsUrl = SHEET_API_URL + `?t=${Date.now()}`;
+                const response = await (withProgress ? authFetchTracked(productsUrl, 'Syncing latest data') : authFetch(productsUrl));
                 if (!response.ok) throw new Error('Network error');
                 const rawData = await response.json();
                 if (rawData && rawData.status === 'error') {
@@ -1330,6 +1606,7 @@
             
             currSelect.value = 'LAK';
             onCurrencyChange();
+            setSplitMode(false); // เปิดหน้าจ่ายเงินใหม่ทุกครั้งเริ่มที่โหมดปกติ
             document.getElementById('paymentModal').classList.remove('hidden');
         }
 
@@ -1354,6 +1631,153 @@
                 document.getElementById('cashPaySection').classList.add('hidden');
                 document.getElementById('qrPaySection').classList.add('hidden');
             }
+        }
+
+
+        // ================= จ่ายแบบแบ่ง (Split payment) =================
+        // ลูกค้าจ่ายได้หลายรายการในบิลเดียว แต่ละรายการเลือก วิธี (Cash/QR/Card) + สกุลเงิน + จำนวนได้เอง
+        // ทุกรายการแปลงเป็นกีบด้วยอัตราแลกเปลี่ยนปัจจุบัน ยอดทั้งบิลที่เก็บลงชีตเป็น LAK
+        const PAY_METHOD_LABEL = { cash: 'Cash', qr: 'QR', card: 'Card' };
+
+        function fmtPayNumber(val, curr) {
+            const d = curr === 'LAK' ? 0 : 2;
+            return val.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+        }
+
+        function setSplitMode(on) {
+            splitMode = !!on;
+            const tg = document.getElementById('splitModeToggle');
+            if (tg) tg.checked = splitMode;
+            document.getElementById('singleMethodWrap').classList.toggle('hidden', splitMode);
+            document.getElementById('splitPaySection').classList.toggle('hidden', !splitMode);
+            if (splitMode) {
+                document.getElementById('cashPaySection').classList.add('hidden');
+                document.getElementById('qrPaySection').classList.add('hidden');
+                payLines = [
+                    { method: 'cash', currency: 'LAK', amount: '' },
+                    { method: 'qr', currency: 'LAK', amount: '' }
+                ];
+                renderPayLines();
+                updateSplitSummary();
+            } else {
+                setPaymentMethod(selectedPaymentMethod);
+            }
+        }
+
+        function renderPayLines() {
+            const codes = Object.keys(RATES);
+            const selCls = 'w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-700 focus:outline-none';
+            document.getElementById('splitLines').innerHTML = payLines.map((l, i) => `
+                <div class="grid grid-cols-12 gap-2 items-center">
+                    <select onchange="onPayLineChange(${i}, 'method', this.value)" class="col-span-3 ${selCls}">
+                        ${Object.keys(PAY_METHOD_LABEL).map(m => `<option value="${m}" ${l.method === m ? 'selected' : ''}>${PAY_METHOD_LABEL[m]}</option>`).join('')}
+                    </select>
+                    <select onchange="onPayLineChange(${i}, 'currency', this.value)" class="col-span-3 ${selCls}">
+                        ${codes.map(c => `<option value="${escapeHtml(c)}" ${l.currency === c ? 'selected' : ''}>${escapeHtml(c)}</option>`).join('')}
+                    </select>
+                    <input type="text" inputmode="decimal" id="payAmt${i}" value="${escapeHtml(l.amount)}" placeholder="0"
+                        oninput="onPayLineChange(${i}, 'amount', this.value)" onblur="fmtPayAmount(${i})"
+                        class="col-span-5 w-full text-sm font-bold p-2.5 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <button type="button" onclick="removePayLine(${i})" ${payLines.length <= 1 ? 'disabled' : ''} class="col-span-1 flex items-center justify-center text-slate-400 hover:text-rose-500 disabled:opacity-30"><i data-lucide="x" class="w-4 h-4"></i></button>
+                </div>
+            `).join('');
+            lucide.createIcons();
+            updateSplitQr();
+        }
+
+        function updateSplitQr() {
+            const hasQr = payLines.some(l => l.method === 'qr');
+            document.getElementById('splitQrBox').classList.toggle('hidden', !hasQr);
+            if (hasQr) document.getElementById('splitQrImg').innerHTML = `<img src="${MERCHANT_QR_IMAGE}" alt="LAPNet QR Payment - MINES ADVISORY GROUP" style="width:190px;height:auto;border-radius:4px;">`;
+        }
+
+        function onPayLineChange(i, field, value) {
+            if (!payLines[i]) return;
+            payLines[i][field] = value;
+            if (field === 'method') updateSplitQr();
+            updateSplitSummary();
+        }
+
+        function fmtPayAmount(i) {
+            const l = payLines[i]; if (!l) return;
+            const n = parseFloat(String(l.amount).replace(/,/g, ''));
+            if (isNaN(n) || n <= 0) return;
+            l.amount = fmtPayNumber(n, l.currency);
+            const el = document.getElementById('payAmt' + i);
+            if (el) el.value = l.amount;
+        }
+
+        function addPayLine() {
+            payLines.push({ method: payLines.some(l => l.method === 'cash') ? 'qr' : 'cash', currency: 'LAK', amount: '' });
+            renderPayLines();
+            fillPayLine(payLines.length - 1); // เติมยอดที่เหลือให้บรรทัดใหม่อัตโนมัติ (ถ้าไม่เหลือจะเว้นว่าง)
+        }
+
+        function removePayLine(i) {
+            if (payLines.length <= 1) return;
+            payLines.splice(i, 1);
+            renderPayLines();
+            updateSplitSummary();
+        }
+
+        // เติมยอดคงเหลือ (หลังหักรายการอื่น) ให้บรรทัด i ในสกุลของบรรทัดนั้น ปัดขึ้นเหมือนโหมดปกติ
+        function fillPayLine(i) {
+            const l = payLines[i]; if (!l) return;
+            const { grandTotal } = getCalculations();
+            let others = 0;
+            payLines.forEach((x, j) => {
+                if (j === i) return;
+                const a = parseFloat(String(x.amount).replace(/,/g, '')) || 0;
+                others += a * (RATES[x.currency] ? RATES[x.currency].rate : 1);
+            });
+            const rate = RATES[l.currency] ? RATES[l.currency].rate : 1;
+            const need = grandTotal - others;
+            if (need <= 0.0001) { l.amount = ''; }
+            else {
+                const exact = need / rate;
+                const v = l.currency === 'LAK' ? Math.ceil(exact - 1e-9) : Math.ceil(exact * 100 - 1e-9) / 100;
+                l.amount = fmtPayNumber(v, l.currency);
+            }
+            const el = document.getElementById('payAmt' + i);
+            if (el) el.value = l.amount;
+            updateSplitSummary();
+        }
+        function fillRemaining() { fillPayLine(payLines.length - 1); }
+
+        function calcSplit() {
+            const { grandTotal } = getCalculations();
+            let receivedLak = 0, cashLak = 0;
+            const lines = [];
+            payLines.forEach(l => {
+                const amt = parseFloat(String(l.amount).replace(/,/g, '')) || 0;
+                if (amt <= 0) return;
+                const rate = RATES[l.currency] ? RATES[l.currency].rate : 1;
+                const lak = amt * rate;
+                receivedLak += lak;
+                if (l.method === 'cash') cashLak += lak;
+                lines.push({ method: l.method, currency: l.currency, amount: amt, rate: rate, amount_lak: Math.round(lak) });
+            });
+            let diff = receivedLak - grandTotal;
+            if (diff > -0.01 && diff < 0) diff = 0; // กันเศษทศนิยมจากการคูณอัตราแลกเปลี่ยน
+            return { grandTotal, receivedLak, cashLak, lines, remaining: diff < 0 ? -diff : 0, change: diff > 0 ? diff : 0 };
+        }
+
+        function updateSplitSummary() {
+            const sp = calcSplit();
+            const box = document.getElementById('splitSummary');
+            if (!box) return;
+            const row = (label, val, cls) => `<div class="flex justify-between items-center"><span class="text-xs font-semibold ${cls}">${label}</span><span class="text-sm font-extrabold ${cls}">${val}</span></div>`;
+            let state = 'ok', note = '';
+            if (sp.remaining > 0) state = 'short';
+            else if (sp.change > sp.cashLak + 0.01) { state = 'bad'; note = 'Non-cash payments exceed the total — no cash to give change from.'; }
+            const theme = { ok: ['bg-emerald-50 border-emerald-200', 'text-emerald-800'], short: ['bg-amber-50 border-amber-200', 'text-amber-800'], bad: ['bg-rose-50 border-rose-200', 'text-rose-700'] }[state];
+            box.className = `p-4 rounded-xl border space-y-1 ${theme[0]}`;
+            box.innerHTML =
+                row('Total due', formatLAK(sp.grandTotal), theme[1]) +
+                row('Received', formatLAK(sp.receivedLak), theme[1]) +
+                row('Remaining', formatLAK(sp.remaining), theme[1]) +
+                row('Change Due (in LAK)', formatLAK(sp.change), theme[1]) +
+                (note ? `<p class="text-[11px] font-semibold ${theme[1]} pt-1">${note}</p>` : '');
         }
 
         function onCurrencyChange() {
@@ -1405,7 +1829,7 @@
         async function saveOrderToSheet(orderData) {
             try {
                 const res = await authFetch(ORDERS_API_URL, { method: 'POST', body: JSON.stringify({ order: orderData }) });
-                if (!res.ok) { console.error('Save order HTTP error:', res.status); return false; }
+                if (!res.ok) { console.error('Save order HTTP error:', res.status); lastSaveError = `HTTP ${res.status}`; return false; }
                 const result = await res.json(); // ตอบกลับเป็น HTML (error page) จะ throw และไปตกที่ catch = ไม่สำเร็จ
                 if (result && result.status === 'success') {
                     const serverId = result.order_id ? String(result.order_id) : '';
@@ -1419,12 +1843,16 @@
                         filterReportsByDate();
                         showToast(`Order number ${oldId} was already used. New number: ${serverId}. Please reprint the receipt.`, 'error');
                     }
+                    lastSaveError = '';
                     return true;
                 }
                 console.error('Save order failed:', result && result.message);
+                lastSaveError = (result && result.message) ? String(result.message) : 'Unknown server response';
                 return false;
             } catch (err) {
                 console.error('Save order error:', err);
+                // "Unexpected token <" = Apps Script ตอบหน้า HTML (สคริปต์พัง/สิทธิ์ผิด/ยังไม่ Deploy เวอร์ชันใหม่)
+                lastSaveError = String(err && err.message ? err.message : err);
                 return false;
             }
         }
@@ -1437,6 +1865,8 @@
             banner.classList.toggle('hidden', n === 0);
             const txt = document.getElementById('unsyncedCount');
             if (txt) txt.innerText = n;
+            const why = document.getElementById('unsyncedReason');
+            if (why) why.textContent = (n > 0 && lastSaveError) ? `Reason: ${lastSaveError}` : '';
         }
 
         async function retryUnsyncedOrders() {
@@ -1444,7 +1874,8 @@
             retryingUnsynced = true;
             try {
                 // เช็กกับชีตก่อน: ถ้าออเดอร์ขึ้นชีตแล้วจริง (แค่ตอบกลับไม่ถึง) จะไม่ส่งซ้ำ ไม่ให้เกิดแถวซ้ำ
-                const loaded = await fetchSalesHistory(true);
+                const pendingIsos = pendingOrders.filter(o => unsyncedIds.has(String(o.order_id))).map(o => getOrderIso(o)).filter(Boolean).sort();
+                const loaded = await fetchSalesHistory(true, pendingIsos[0] || '');
                 if (!loaded) { showToast('Cannot check Google Sheet right now. Please try again.', 'error'); return; }
                 const todo = pendingOrders.filter(o => unsyncedIds.has(String(o.order_id)));
                 let ok = 0, fail = 0;
@@ -1493,12 +1924,28 @@
 
         function processPayment() {
             const { subtotal, discountAmount, vatAmount, grandTotal } = getCalculations();
-            let rawInputStr = document.getElementById('cashReceivedInput').value.replace(/,/g, '');
-            const receivedVal = parseFloat(rawInputStr) || 0;
-            const currency = document.getElementById('receivedCurrency').value;
-            const rateObj = RATES[currency];
-            const rate = rateObj ? rateObj.rate : 1;
-            let receivedInLAK = receivedVal * rate;
+            let receivedVal, currency, rate, receivedInLAK;
+            let paymentMethodUsed = selectedPaymentMethod;
+            let paymentLines = null;
+            if (splitMode) {
+                // จ่ายแบบแบ่ง: เก็บยอดทั้งบิลเป็น LAK (rate = 1) และเก็บรายการจ่ายแยกไว้ใน payments
+                const sp = calcSplit();
+                if (sp.lines.length === 0) { showToast('Please enter at least one payment amount', 'error'); return; }
+                if (sp.remaining > 0) { showToast('Total received is less than total amount!', 'error'); return; }
+                if (sp.change > sp.cashLak + 0.01) { showToast('Non-cash payments exceed the total — cannot give change', 'error'); return; }
+                currency = 'LAK'; rate = 1;
+                receivedInLAK = sp.receivedLak;
+                receivedVal = Math.round(sp.receivedLak);
+                paymentMethodUsed = 'split';
+                paymentLines = sp.lines;
+            } else {
+                let rawInputStr = document.getElementById('cashReceivedInput').value.replace(/,/g, '');
+                receivedVal = parseFloat(rawInputStr) || 0;
+                currency = document.getElementById('receivedCurrency').value;
+                const rateObj = RATES[currency];
+                rate = rateObj ? rateObj.rate : 1;
+                receivedInLAK = receivedVal * rate;
+            }
 
             if (receivedInLAK + 0.01 < grandTotal) { // เผื่อเศษทศนิยมเล็กน้อยจากการคูณอัตราแลกเปลี่ยน
                 showToast('Cash received is less than total amount!', 'error');
@@ -1517,6 +1964,9 @@
             const dateISO = getLocalDateStr();
             const dateDisplay = now.toLocaleDateString('en-GB');
 
+            // ต้นทุน/กำไร (เก็บเป็นสกุลเดียวกับ subtotal/price คือ LAK / rate)
+            const totalCostLAK = cart.reduce((sum, i) => sum + ((parseFloat(i.cost) || 0) * i.qty), 0);
+            const profitLAK = (subtotal - discountAmount) - totalCostLAK; // ไม่รวม VAT เพราะ VAT ไม่ใช่รายได้ของร้าน
             const orderFunding = combineFunding(cart); // สรุประดับออเดอร์ (ตัวเลขแต่ละช่องเรียงตรงกันตามลำดับ)
             const newOrder = {
                 order_id: orderId,
@@ -1528,16 +1978,19 @@
                 discount: discountAmount / rate,
                 vat: vatAmount / rate,
                 grand_total: grandTotalInCurr,
-                payment_method: selectedPaymentMethod,
+                payment_method: paymentMethodUsed,
+                ...(paymentLines ? { payments: paymentLines } : {}),
                 received_amount: receivedVal,
                 received_currency: currency,
                 change_lak: Math.max(0, Math.round(receivedInLAK - grandTotal)), // เงินทอน คิดเป็น LAK เสมอ (ตรงกับที่โชว์ในกล่อง Change ตอนจ่ายเงิน)
                 exchange_rate: rate, // อัตราแลกเปลี่ยน ณ ตอนขาย (LAK ต่อ 1 หน่วยของ received_currency) เก็บไว้เผื่อ rate เปลี่ยนภายหลัง
+                total_cost: totalCostLAK / rate,
+                profit: profitLAK / rate,
                 items_summary: cart.map(i => `${i.name} x${i.qty}`).join(', '), // สรุปรายการสินค้า เช่น "เสื้อยืด x2, กางเกง x1"
                 donor: orderFunding.donor,
                 grant: orderFunding.grant,
                 account: orderFunding.account,
-                items: cart.map(i => ({ id: i.id, name: i.name, qty: i.qty, price: i.price / rate, donor: i.donor || '', grant: i.grant || '', account: i.account || '' }))
+                items: cart.map(i => ({ id: i.id, name: i.name, qty: i.qty, price: i.price / rate, cost: (parseFloat(i.cost) || 0) / rate, donor: i.donor || '', grant: i.grant || '', account: i.account || '' }))
             };
 
             pendingOrders.push(newOrder);
@@ -1546,7 +1999,7 @@
                     unsyncedIds.add(String(orderId));
                     updateUnsyncedBanner();
                     filterReportsByDate();
-                    showToast(`Order ${orderId} was NOT saved to Google Sheet! Open Reports and press Retry.`, 'error');
+                    showToast(`Order ${orderId} was NOT saved to Google Sheet${lastSaveError ? ' (' + lastSaveError + ')' : ''}! Open Reports and press Retry.`, 'error');
                 }
             });
             salesHistory.unshift(newOrder);
@@ -1636,7 +2089,16 @@
             const pm = String(o.payment_method || 'cash').trim().toLowerCase();
             const methodLabel = ({ cash: 'Cash', qr: 'QR', card: 'Card' })[pm] || pm.toUpperCase();
 
-            if (recAmount > 0) {
+            const payLinesR = Array.isArray(o.payments) ? o.payments : [];
+            if (pm === 'split' && payLinesR.length) {
+                const lbl = m => ({ cash: 'Cash', qr: 'QR', card: 'Card' })[String(m).toLowerCase()] || String(m);
+                const parts = payLinesR.map(p => {
+                    const c = p.currency || 'LAK';
+                    const amt = formatCurrency(parseFloat(p.amount) || 0, c);
+                    return c === 'LAK' ? `${lbl(p.method)} ${amt}` : `${lbl(p.method)} ${amt} (=${formatLAK(parseFloat(p.amount_lak) || 0)})`;
+                });
+                document.getElementById('receiptPaidInfo').innerText = `${parts.join(' + ')} | Change: ${formatLAK(parseFloat(o.change_lak) || 0)}`;
+            } else if (recAmount > 0) {
                 let changeLAK;
                 if (o.change_lak !== undefined && o.change_lak !== null && o.change_lak !== '') {
                     changeLAK = parseFloat(o.change_lak) || 0; // ใช้ค่าที่บันทึกไว้ตอนขาย (แม่นยำกว่า เพราะ rate อาจเปลี่ยนไปแล้ว)
@@ -1653,15 +2115,95 @@
         }
 
         function closeReceiptModal() { document.getElementById('receiptModal').classList.add('hidden'); }
+        // เติมข้อมูลลงเทมเพลตใบเสร็จ A4 จากใบเสร็จที่เปิดอยู่ (ใช้ข้อมูลชุดเดียวกัน ไม่ต้องคำนวณซ้ำ)
+        function fillA4Receipt() {
+            const $ = id => document.getElementById(id);
+            const hdr = document.querySelector('#printableReceipt > div:first-child');
+            const foot = document.querySelectorAll('#printableReceipt > div:last-child p');
+            $('a4Shop').textContent = hdr.querySelector('h4').textContent;
+            $('a4Addr').textContent = hdr.querySelector('p').textContent;
+            $('a4Date').textContent = $('receiptDate').textContent;
+            $('a4OrderId').textContent = $('receiptOrderId').textContent;
+            $('a4Cashier').textContent = $('receiptCashierName').textContent;
+            $('a4Subtotal').textContent = $('receiptSubtotal').textContent;
+            $('a4Discount').textContent = $('receiptDiscount').textContent;
+            $('a4Vat').textContent = $('receiptVat').textContent;
+            $('a4Grand').textContent = $('receiptGrandTotal').textContent;
+            $('a4Paid').textContent = $('receiptPaidInfo').textContent;
+            // ต้นทุน/กำไร (เฉพาะบิล A4): ใช้ค่าที่บันทึกในออเดอร์ ถ้าไม่มี (ออเดอร์เก่า) คำนวณจากรายการสินค้า
+            const o = currentOrderToPrint || {};
+            const cur = o.received_currency || 'LAK';
+            let its = o.items;
+            if (typeof its === 'string') { try { its = JSON.parse(its); } catch (e) { its = []; } }
+            let cost = parseFloat(o.total_cost);
+            const hasItemCost = Array.isArray(its) && its.some(i => i.cost !== undefined && i.cost !== '' && !isNaN(parseFloat(i.cost)));
+            if (isNaN(cost) && hasItemCost) cost = its.reduce((s, i) => s + (parseFloat(i.cost) || 0) * (parseFloat(i.qty) || 0), 0);
+            $('a4Thanks').textContent = foot[0] ? foot[0].textContent : '';
+            $('a4Tel').textContent = foot[1] ? foot[1].textContent : '';
+            $('a4Web').textContent = foot[2] ? foot[2].textContent : '';
+            // รายการสินค้า: คัดลอกแถวจากใบเสร็จ (ข้อความถูก escape แล้ว รวมบรรทัด Donor/Grant/Account ใต้ชื่อสินค้า)
+            // แล้วแทรกคอลัมน์ Cost / Profit ของแต่ละรายการ (เรียง: Item | Cost | Qty | Price | Profit)
+            const itemList = Array.isArray(its) ? its : [];
+            const realRows = Array.from($('receiptItemsBody').children).filter(tr => !(tr.children[0] && tr.children[0].colSpan > 1));
+            // ต้นทุนต่อชิ้นของแต่ละรายการ: ค่าที่บันทึกในรายการ -> หาจากสินค้า (id/ชื่อ) -> ถ้ามีรายการเดียวใช้ total_cost ของบิล
+            const unitCostOf = it => {
+                if (it.cost !== undefined && it.cost !== '' && !isNaN(parseFloat(it.cost))) return parseFloat(it.cost);
+                const prod = products.find(p => it.id !== undefined && String(p.id) === String(it.id)) || products.find(p => p.name === it.name);
+                if (prod && prod.cost !== undefined) return parseFloat(prod.cost) || 0;
+                const q = parseFloat(it.qty) || 0;
+                if (itemList.length === 1 && !isNaN(cost) && q > 0) return cost / q;
+                return null;
+            };
+            let rowIdx = 0, sumCost = 0, sumProfit = 0, sumQty = 0, allKnown = itemList.length > 0;
+            $('a4Items').innerHTML = Array.from($('receiptItemsBody').children).map(tr => {
+                if (tr.children[0] && tr.children[0].colSpan > 1) {
+                    return `<tr><td class="c0" colspan="5">${tr.children[0].innerHTML}</td></tr>`; // แถวสรุป Donor/Grant/Account ท้ายตาราง
+                }
+                const it = itemList[rowIdx++] || {};
+                const qty = parseFloat(it.qty) || 0;
+                const uc = unitCostOf(it);
+                const lineCost = uc === null ? null : uc * qty;
+                const lineProfit = uc === null ? null : (parseFloat(it.price) || 0) * qty - lineCost;
+                sumQty += qty;
+                if (uc === null) allKnown = false; else { sumCost += lineCost; sumProfit += lineProfit; }
+                const c = tr.children;
+                return '<tr>' +
+                    `<td class="c0">${c[0].innerHTML}</td>` +
+                    `<td class="c3">${uc === null ? '-' : formatCurrency(lineCost, cur)}</td>` +
+                    `<td class="c1">${c[1].innerHTML}</td>` +
+                    `<td class="c2">${c[2].innerHTML}</td>` +
+                    `<td class="c4${lineProfit !== null && lineProfit < 0 ? ' neg' : ''}">${uc === null ? '-' : formatCurrency(lineProfit, cur)}</td>` +
+                    '</tr>';
+            }).join('');
+            // แถวรวมท้ายตาราง Item: Total Cost / Profit ของทั้งบิล (ใช้ค่าที่บันทึกในออเดอร์ก่อน ไม่มีค่อยใช้ผลรวมรายการ)
+            let totCost = !isNaN(cost) ? cost : (allKnown ? sumCost : NaN);
+            let totProfit = parseFloat(o.profit);
+            if (isNaN(totProfit)) totProfit = !isNaN(totCost) ? (parseFloat(o.subtotal || 0) - parseFloat(o.discount || 0)) - totCost : NaN;
+            $('a4ItemsFoot').innerHTML = (realRows.length && !isNaN(totCost))
+                ? `<tr><td class="c0">Total</td><td class="c3">${formatCurrency(totCost, cur)}</td><td class="c1">${sumQty}</td><td class="c2"></td><td class="c4${totProfit < 0 ? ' neg' : ''}">${formatCurrency(totProfit, cur)}</td></tr>`
+                : '';
+        }
+
+        function removeA4PageStyle() {
+            document.body.classList.remove('print-a4');
+            const st = document.getElementById('a4PageStyle');
+            if (st) st.remove();
+        }
+
         function printReceipt() {
-            document.body.classList.remove('print-a4'); // พิมพ์ปกติ (ใบเสร็จให้ลูกค้า) ไม่ขยาย
+            removeA4PageStyle(); // พิมพ์ปกติ (ใบเสร็จให้ลูกค้า) ไม่ใช้เทมเพลต A4
             window.print();
         }
-        // พิมพ์ขนาด A4: ใส่คลาส print-a4 ชั่วคราว แล้วถอดออกเมื่อพิมพ์/ยกเลิกเสร็จ
+        // พิมพ์ A4: เติมเทมเพลต + ตั้งขนาดกระดาษ A4 (ไม่มีหัว/ท้ายกระดาษของเบราว์เซอร์) ชั่วคราว แล้วคืนค่าเมื่อพิมพ์เสร็จ
         function printReceiptA4() {
+            fillA4Receipt();
+            const st = document.createElement('style');
+            st.id = 'a4PageStyle';
+            st.textContent = '@page { size: A4 portrait; margin: 0; }';
+            document.head.appendChild(st);
             document.body.classList.add('print-a4');
             const cleanup = () => {
-                document.body.classList.remove('print-a4');
+                removeA4PageStyle();
                 window.removeEventListener('afterprint', cleanup);
             };
             window.addEventListener('afterprint', cleanup);
@@ -1730,22 +2272,28 @@
             const rateData = { code: code, name: name, rate: rate, updated: today, modifiedBy: loggedInCashier || '' };
 
             showToast('Saving rate to Google Sheet...', 'info');
+            const ringId = startProgress('Saving rate...', 'ring');
+            let ringOk = false;
 
             try {
                 const response = await authFetch(RATES_API_URL, {
                     method: 'POST',
                     body: JSON.stringify({ action: 'save', rate: rateData })
                 });
+                setProgress(ringId, 70, 95);
                 const result = await response.json();
                 if (result.status === 'success') {
                     showToast('Saved to Google Sheet successfully', 'success');
                     closeRateModal();
-                    fetchRatesFromSheet();
+                    await fetchRatesFromSheet();
+                    ringOk = true;
                 } else {
                     showToast('Failed to save', 'error');
                 }
             } catch (err) {
                 showToast('Connection error', 'error');
+            } finally {
+                finishProgress(ringId, ringOk);
             }
         }
 
@@ -1767,9 +2315,39 @@
             }
         }
 
-        async function fetchSalesHistory(silent = true) {
+        // ช่วงวันที่ที่จะขอจากชีต: ตามช่อง From/To แต่ปลายทางไม่ต่ำกว่า "วันนี้" เสมอ
+        // (เลขออเดอร์ใหม่ต้องรู้ออเดอร์ของวันนี้) และเริ่มต้นไม่หลังวันของออเดอร์ที่ยังไม่บันทึก (extraFrom)
+        function getHistoryQueryRange(extraFrom) {
+            const today = getLocalDateStr();
+            let from = document.getElementById('reportStartDate').value || '';
+            let to = document.getElementById('reportEndDate').value || '';
+            if (from && extraFrom && extraFrom < from) from = extraFrom;
+            if (to && to < today) to = today;
+            return { from, to };
+        }
+
+        // ถ้าช่วงที่เลือกอยู่นอกช่วงที่โหลดมา ให้โหลดใหม่ก่อน (ใช้ตอน Export)
+        async function ensureHistoryCovers() {
+            const f = document.getElementById('reportStartDate').value || '';
+            const t = document.getElementById('reportEndDate').value || '';
+            const coversFrom = !historyRange.from || (f && f >= historyRange.from);
+            const coversTo = !historyRange.to || (t && t <= historyRange.to);
+            if (!(coversFrom && coversTo)) await fetchSalesHistory(false);
+        }
+
+        // กด Filter: ดึงประวัติ "เฉพาะช่วงวันที่ที่เลือก" จากชีต (มีแถบ % ด้านล่าง) แล้วกรองแสดงผล
+        async function applyReportFilter() {
+            await fetchSalesHistory(true, '', true);
+            filterReportsByDate();
+        }
+
+        async function fetchSalesHistory(silent = true, extraFrom = '', withProgress = false) {
             try {
-                const response = await authFetch(ORDERS_API_URL + `?t=${Date.now()}`);
+                const rg = getHistoryQueryRange(extraFrom);
+                let url = ORDERS_API_URL + `?t=${Date.now()}`;
+                if (rg.from) url += `&from=${encodeURIComponent(rg.from)}`;
+                if (rg.to) url += `&to=${encodeURIComponent(rg.to)}`;
+                const response = await (withProgress ? authFetchTracked(url, 'Loading sales history') : authFetch(url));
                 if (!response.ok) throw new Error('Network error');
                 const data = await response.json();
                 if (data && data.status === 'error') {
@@ -1783,6 +2361,7 @@
                     pendingOrders = pendingOrders.filter(o => !serverIds.has(String(o.order_id)));
                     serverIds.forEach(id => unsyncedIds.delete(id)); // ขึ้นชีตแล้ว = ไม่ใช่ "ยังไม่บันทึก" อีกต่อไป
                     salesHistory = [...pendingOrders, ...serverOrders];
+                    historyRange = rg;
                     updateUnsyncedBanner();
                     filterReportsByDate();
                     if (!silent) showToast('Sales history refreshed', 'success');
@@ -1891,30 +2470,86 @@
             lucide.createIcons();
         }
 
+        // แยกยอดขายของ 1 บิลตามสกุลเงินที่ลูกค้าจ่ายจริง
+        // - บิลปกติ: ทั้งบิลอยู่ในสกุลที่รับเงิน (เหมือนเดิม)
+        // - บิลจ่ายแบบแบ่ง: ยอดของแต่ละสกุลคือจำนวนที่ลูกค้าจ่ายในสกุลนั้น (เช่น $5 ไปการ์ด USD, 200,000 กีบไปการ์ด LAK)
+        //   เงินทอน (เป็นกีบ) หักจากส่วนที่เป็นกีบก่อน ถ้ากีบไม่พอจึงหักจากสกุลอื่นด้วยอัตราที่บันทึกไว้
+        //   ทำให้ยอดทุกสกุลรวมเป็นมูลค่าเท่ากับยอดบิลพอดี
+        // - กำไรแบ่งตามสัดส่วนมูลค่า (เทียบเป็นกีบ) แล้วแปลงกลับเป็นสกุลของการ์ดนั้น
+        function getOrderCurrencyShares(o) {
+            const gTotal = parseFloat(o.grand_total || 0) || 0;
+            const profitVal = parseFloat(o.profit);
+            const recCurr = o.received_currency || 'LAK';
+            const lines = Array.isArray(o.payments) ? o.payments : [];
+
+            if (String(o.payment_method).toLowerCase() !== 'split' || lines.length === 0) {
+                const out = { sales: { [recCurr]: gTotal }, profit: {}, main: recCurr };
+                if (!isNaN(profitVal)) out.profit[recCurr] = profitVal;
+                return out;
+            }
+
+            const contrib = {}, rateOf = { LAK: 1 };
+            lines.forEach(p => {
+                const c = p.currency || 'LAK';
+                contrib[c] = (contrib[c] || 0) + (parseFloat(p.amount) || 0);
+                const r = parseFloat(p.rate);
+                rateOf[c] = c === 'LAK' ? 1 : ((r > 0) ? r : (RATES[c] ? RATES[c].rate : 1));
+            });
+
+            let changeLeft = parseFloat(o.change_lak) || 0;
+            if (changeLeft > 0 && contrib.LAK) {
+                const take = Math.min(contrib.LAK, changeLeft);
+                contrib.LAK -= take; changeLeft -= take;
+            }
+            if (changeLeft > 0.0001) {
+                Object.keys(contrib).filter(c => c !== 'LAK')
+                    .sort((x, y) => contrib[y] * rateOf[y] - contrib[x] * rateOf[x])
+                    .forEach(c => {
+                        if (changeLeft <= 0.0001) return;
+                        const take = Math.min(contrib[c] * rateOf[c], changeLeft);
+                        contrib[c] -= take / rateOf[c]; changeLeft -= take;
+                    });
+            }
+
+            let totalLakEq = 0, main = 'LAK', mainVal = -Infinity;
+            Object.keys(contrib).forEach(c => {
+                contrib[c] = c === 'LAK' ? Math.round(contrib[c]) : Math.round(contrib[c] * 100) / 100;
+                const v = contrib[c] * rateOf[c];
+                totalLakEq += v;
+                if (v > mainVal) { mainVal = v; main = c; }
+            });
+
+            const out = { sales: contrib, profit: {}, main: main };
+            if (!isNaN(profitVal) && totalLakEq > 0) {
+                Object.keys(contrib).forEach(c => {
+                    out.profit[c] = profitVal * ((contrib[c] * rateOf[c]) / totalLakEq) / rateOf[c];
+                });
+            }
+            return out;
+        }
+
         function renderReportsView(ordersToRender) {
             renderTopSales(ordersToRender);
 
             let salesByCurr = {};
             let ordersCountByCurr = {};
             let itemsCountByCurr = {};
+            let profitByCurr = {};
 
             ordersToRender.forEach(o => {
-                const gTotal = parseFloat(o.grand_total || 0) || 0;
-                const curr = o.received_currency || 'LAK';
-
-                if (!salesByCurr[curr]) salesByCurr[curr] = 0;
-                salesByCurr[curr] += gTotal;
-
-                if (!ordersCountByCurr[curr]) ordersCountByCurr[curr] = 0;
-                ordersCountByCurr[curr]++;
-
+                // แยกยอดของบิลนี้ตามสกุลเงินที่ลูกค้าจ่ายจริง (บิลแบบแบ่งจะกระจายไปหลายการ์ด)
+                const sh = getOrderCurrencyShares(o);
                 let itemsList = o.items;
                 if (typeof itemsList === 'string') { try { itemsList = JSON.parse(itemsList); } catch(e) { itemsList = []; } }
-                
-                if (!itemsCountByCurr[curr]) itemsCountByCurr[curr] = 0;
-                if (Array.isArray(itemsList)) {
-                    itemsCountByCurr[curr] += itemsList.reduce((sum, i) => sum + (parseInt(i.qty) || 0), 0);
-                }
+                const itemQty = Array.isArray(itemsList) ? itemsList.reduce((sum, i) => sum + (parseInt(i.qty) || 0), 0) : 0;
+
+                Object.keys(sh.sales).forEach(curr => {
+                    salesByCurr[curr] = (salesByCurr[curr] || 0) + sh.sales[curr];
+                    ordersCountByCurr[curr] = (ordersCountByCurr[curr] || 0) + 1;
+                    if (sh.profit[curr] !== undefined) profitByCurr[curr] = (profitByCurr[curr] || 0) + sh.profit[curr];
+                });
+                // จำนวนสินค้านับครั้งเดียว ที่สกุลหลักของบิล (กันนับซ้ำเมื่อบิลเดียวขึ้นหลายการ์ด)
+                itemsCountByCurr[sh.main] = (itemsCountByCurr[sh.main] || 0) + itemQty;
             });
 
             let cardsHtml = '';
@@ -1940,6 +2575,7 @@
                             <h3 class="text-2xl font-extrabold ${colorClass} mt-1">${formatCurrency(amount, code)}</h3>
                         </div>
                         <p class="text-[11px] text-slate-400 mt-2">${orderCount} orders · ${itemCount} items in range</p>
+                        ${profitByCurr[code] !== undefined ? `<p class="text-[11px] font-semibold ${profitByCurr[code] >= 0 ? 'text-emerald-600' : 'text-rose-600'} mt-1">Profit: ${formatCurrency(profitByCurr[code], code)}</p>` : ''}
                     </div>
                 `;
             });
@@ -1971,7 +2607,11 @@
                 let itemsList = o.items;
                 if (typeof itemsList === 'string') { try { itemsList = JSON.parse(itemsList); } catch(e) { itemsList = []; } }
                 const totalItemsCount = Array.isArray(itemsList) ? itemsList.reduce((sum, i) => sum + (parseInt(i.qty) || 0), 0) : 0;
-                const paidDisplay = recAmount > 0 ? `<span class="font-bold text-slate-700">${formatCurrency(recAmount, recCurr)}</span>` : '-';
+                let paidDisplay = recAmount > 0 ? `<span class="font-bold text-slate-700">${formatCurrency(recAmount, recCurr)}</span>` : '-';
+                if (Array.isArray(o.payments) && o.payments.length) {
+                    const detail = o.payments.map(p => `${String(p.method).toUpperCase()} ${formatCurrency(parseFloat(p.amount) || 0, p.currency || 'LAK')}`).join(' + ');
+                    paidDisplay += `<span class="block text-[11px] text-slate-400 mt-0.5">${escapeHtml(detail)}</span>`;
+                }
 
                 const storedRate = parseFloat(o.exchange_rate);
                 const hasStoredRate = !isNaN(storedRate) && storedRate > 0;
@@ -2014,7 +2654,8 @@
             lucide.createIcons();
         }
 
-        function exportReportsToExcel() {
+        async function exportReportsToExcel() {
+            await ensureHistoryCovers();
             const startDate = document.getElementById('reportStartDate').value;
             const endDate = document.getElementById('reportEndDate').value;
 
@@ -2031,7 +2672,7 @@
                 return;
             }
 
-            let sheetRows = [["Order ID", "Date", "Time", "Items", "Bill Total", "Paid Received", "Change", "Rate", "Currency", "Method"]];
+            let sheetRows = [["Order ID", "Date", "Time", "Items", "Bill Total", "Total Cost", "Profit", "Paid Received", "Change", "Rate", "Currency", "Method", "Payment Detail"]];
 
             ordersToExport.forEach(o => {
                 let itemsList = o.items;
@@ -2064,20 +2705,26 @@
                     o.time || '',
                     `${totalItemsCount} items`,
                     formatCurrency(grandTotal, recCurr),
+                    (o.total_cost !== undefined && o.total_cost !== '') ? formatCurrency(parseFloat(o.total_cost) || 0, recCurr) : '-',
+                    (o.profit !== undefined && o.profit !== '') ? formatCurrency(parseFloat(o.profit) || 0, recCurr) : '-',
                     paidStr,
                     changeStr,
                     rateStr,
                     recCurr,
-                    payMethod
+                    payMethod,
+                    (Array.isArray(o.payments) && o.payments.length)
+                        ? o.payments.map(p => `${String(p.method).toUpperCase()} ${formatCurrency(parseFloat(p.amount) || 0, p.currency || 'LAK')}`).join(' + ')
+                        : ''
                 ]);
             });
 
             const ws = XLSX.utils.aoa_to_sheet(sheetRows);
             ws['!cols'] = [
                 { wch: 14 }, { wch: 12 }, { wch: 12 }, { wch: 10 },
-                { wch: 14 }, { wch: 14 }, { wch: 12 }, { wch: 12 },
+                { wch: 14 }, { wch: 14 }, { wch: 14 }, { wch: 14 }, { wch: 12 }, { wch: 12 },
                 { wch: 10 }, { wch: 10 }
             ];
+            ws['!cols'].push({ wch: 40 });
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "Sales History");
             XLSX.writeFile(wb, `sales_report_${startDate || 'all'}_to_${endDate || 'all'}.xlsx`);
@@ -2094,6 +2741,8 @@
                     <td class="p-4 font-bold text-slate-800">${escapeHtml(p.name)}</td>
                     <td class="p-4 text-slate-500">${p.subcategory ? `${escapeHtml(p.mainCategory)} ·${escapeHtml(p.subcategory)}` : escapeHtml(p.mainCategory)}</td>
                     <td class="p-4 text-right font-bold text-indigo-600">${formatLAK(p.price)}</td>
+                    <td class="p-4 text-right text-slate-500">${formatLAK(p.cost || 0)}</td>
+                    <td class="p-4 text-right font-semibold ${(p.price - (p.cost || 0)) >= 0 ? 'text-emerald-600' : 'text-rose-600'}">${formatLAK(p.price - (p.cost || 0))}</td>
                     <td class="p-4 text-center"><span class="px-2.5 py-1 rounded-full text-xs font-bold ${p.stock < 5 ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">${p.stock} units</span></td>
                     <td class="p-4 text-center space-x-2" data-requires-auth>
                         <button onclick="editProduct('${String(p.id).replace(/'/g, "\\'")}')" class="p-1.5 text-slate-500 hover:text-indigo-600 hover:bg-slate-100 rounded-lg"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
@@ -2119,6 +2768,7 @@
                 document.getElementById('modalColor').value = p.color;
                 document.getElementById('modalStock').value = p.stock;
                 document.getElementById('modalPrice').value = p.price;
+                document.getElementById('modalCost').value = p.cost || '';
                 document.getElementById('modalBarcode').value = p.barcode;
                 document.getElementById('modalDonor').value = p.donor || '';
                 document.getElementById('modalGrant').value = p.grant || '';
@@ -2134,13 +2784,28 @@
                 document.getElementById('modalColor').value = '';
                 document.getElementById('modalStock').value = '';
                 document.getElementById('modalPrice').value = '';
+                document.getElementById('modalCost').value = '';
                 document.getElementById('modalBarcode').value = '';
                 document.getElementById('modalDonor').value = '';
                 document.getElementById('modalGrant').value = '';
                 document.getElementById('modalAccount').value = '';
                 document.getElementById('modalImage').value = '';
             }
+            updateModalProfit();
             document.getElementById('productModal').classList.remove('hidden');
+        }
+
+        // แสดงกำไรต่อชิ้น + % ใน modal สินค้า ขณะกรอกราคา/ต้นทุน
+        function updateModalProfit() {
+            const price = parseFloat(document.getElementById('modalPrice').value) || 0;
+            const cost = parseFloat(document.getElementById('modalCost').value) || 0;
+            const el = document.getElementById('modalProfitText');
+            if (!el) return;
+            if (!price && !cost) { el.textContent = 'Profit: -'; el.className = 'text-xs font-semibold text-slate-400 -mt-1'; return; }
+            const profit = price - cost;
+            const pct = price > 0 ? (profit / price * 100).toFixed(1) : '0.0';
+            el.textContent = `Profit: ${formatLAK(profit)} / unit (${pct}%)`;
+            el.className = `text-xs font-semibold ${profit >= 0 ? 'text-emerald-600' : 'text-rose-600'} -mt-1`;
         }
 
         function closeProductModal() { document.getElementById('productModal').classList.add('hidden'); }
@@ -2156,6 +2821,7 @@
             const color = document.getElementById('modalColor').value.trim() || '';
             const stock = parseInt(document.getElementById('modalStock').value) || 0;
             const price = parseFloat(document.getElementById('modalPrice').value) || 0;
+            const cost = parseFloat(document.getElementById('modalCost').value) || 0;
             const barcode = document.getElementById('modalBarcode').value.trim() || '';
             const donor = document.getElementById('modalDonor').value.trim();
             const grant = document.getElementById('modalGrant').value.trim();
@@ -2165,23 +2831,29 @@
             if (!baseName) { showToast('Please enter product name', 'error'); return; }
 
             const productId = id !== '' ? id : Date.now();
-            const productData = { id: productId, Name: baseName, Category: mainCategory, Subcategory: subcategory, Size: size, Color: color, 'In Stock': stock, Price: price, Barcode: barcode, Donor: donor, Grant: grant, Account: account, Img: image };
+            const productData = { id: productId, Name: baseName, Category: mainCategory, Subcategory: subcategory, Size: size, Color: color, 'In Stock': stock, Price: price, Cost: cost, Barcode: barcode, Donor: donor, Grant: grant, Account: account, Img: image };
             const actionType = id !== '' ? 'update' : 'add';
 
             showToast('Saving to Google Sheet...', 'info');
+            // วงกลม % ครอบตั้งแต่ส่งข้อมูลจนรายการสินค้าอัปเดตเสร็จ (0-70% รอบันทึก, 70-100% โหลดรายการใหม่)
+            const ringId = startProgress('Saving product...', 'ring');
+            let ringOk = false;
             try {
                 const response = await authFetch(SHEET_API_URL, { method: 'POST', body: JSON.stringify({ action: actionType, product: productData }) });
+                setProgress(ringId, 70, 95);
                 const result = await response.json();
                 if (result.status === 'success') {
                     showToast('Saved successfully!', 'success');
                     closeProductModal();
-                    fetchProductsFromSheet(false);
+                    await fetchProductsFromSheet(false);
+                    ringOk = true;
                 } else if (result.message === 'Unauthorized') {
                     handleSessionExpired();
                 } else {
                     showToast('Failed to save', 'error');
                 }
             } catch (error) { showToast('Connection error', 'error'); }
+            finally { finishProgress(ringId, ringOk); }
         }
 
         async function deleteProduct(id) {
